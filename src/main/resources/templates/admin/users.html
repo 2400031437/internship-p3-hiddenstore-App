@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('List users')}"></head>
+<body>
+<nav th:replace="~{fragments :: adminnav}"></nav>
+<div class="container my-4">
+<div th:replace="~{fragments :: alerts}"></div>
+<h3 class="mb-3">Registered users</h3>
+<div class="alert alert-info" th:if="${#lists.isEmpty(users)}">No users registered.</div>
+<table class="table table-bordered bg-white align-middle" th:if="${!#lists.isEmpty(users)}">
+  <thead class="table-dark"><tr><th>#</th><th>Image</th><th>Username</th><th>Email</th><th>Address</th><th>Contact</th><th>Delete</th></tr></thead>
+  <tbody>
+    <tr th:each="u, st : ${users}">
+      <td th:text="${st.count}">1</td>
+      <td><img class="thumb" th:src="@{${u.imageUrl}}" alt=""></td>
+      <td th:text="${u.username}">user</td><td th:text="${u.email}">mail</td>
+      <td th:text="${u.address}">addr</td><td th:text="${u.mobile}">phone</td>
+      <td><form th:action="@{/admin/users/{id}/delete(id=${u.id})}" method="post" onsubmit="return confirm('Delete this user and their orders?');">
+        <button class="btn btn-sm btn-danger" type="submit">Delete</button></form></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

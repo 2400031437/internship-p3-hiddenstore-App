@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Manage list')}"></head>
+<body>
+<nav th:replace="~{fragments :: adminnav}"></nav>
+<div class="container my-4">
+<div th:replace="~{fragments :: alerts}"></div>
+<div class="row">
+  <div class="col-md-4">
+    <div class="card mb-3"><div class="card-body">
+      <h5 th:text="${editing == null} ? ('Insert ' + ${kind}) : ('Edit ' + ${kind})">Insert</h5>
+      <form th:action="@{${base + '/save'}}" method="post">
+        <input type="hidden" name="id" th:if="${editing != null}" th:value="${editing.id}">
+        <div class="mb-2"><input class="form-control" name="title" th:placeholder="${kind + ' title'}" th:value="${editing != null} ? ${editing.title}" required></div>
+        <button class="btn btn-primary" type="submit" th:text="${editing == null} ? ('Insert ' + ${kind}) : ('Update ' + ${kind})">Save</button>
+        <a class="btn btn-outline-secondary" th:if="${editing != null}" th:href="@{${base}}">Cancel</a>
+      </form>
+    </div></div>
+  </div>
+  <div class="col-md-8">
+    <h4 th:text="'View ' + ${kind} + ' list'">List</h4>
+    <p class="text-muted small">Deleting also deletes the products that belong to it.</p>
+    <table class="table table-bordered bg-white">
+      <thead class="table-dark"><tr><th>#</th><th>Title</th><th>Edit</th><th>Delete</th></tr></thead>
+      <tbody>
+        <tr th:each="i, st : ${items}">
+          <td th:text="${st.count}">1</td><td th:text="${i.title}">title</td>
+          <td><a class="btn btn-sm btn-warning" th:href="@{${base}(edit=${i.id})}">Edit</a></td>
+          <td><form th:action="@{${base + '/' + i.id + '/delete'}}" method="post" onsubmit="return confirm('Delete? Products inside will be deleted too.');">
+            <button class="btn btn-sm btn-danger" type="submit">Delete</button></form></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

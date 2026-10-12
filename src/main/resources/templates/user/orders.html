@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('My orders')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div class="container my-4">
+<div th:replace="~{fragments :: alerts}"></div>
+<h3 class="mb-3" th:text="${onlyPending} ? 'Pending Orders' : 'My Orders'">My Orders</h3>
+<div class="alert alert-info" th:if="${#lists.isEmpty(orders)}">You have zero orders here. <a th:href="@{/}">Explore products</a></div>
+<table class="table table-bordered bg-white align-middle" th:if="${!#lists.isEmpty(orders)}">
+  <thead class="table-dark"><tr><th>#</th><th>Invoice</th><th>Products</th><th>Qty</th><th>Amount</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+  <tbody>
+    <tr th:each="o, st : ${orders}">
+      <td th:text="${st.count}">1</td>
+      <td th:text="${o.invoiceNumber}">123</td>
+      <td><div th:each="i : ${o.items}" th:text="${i.product.title + ' x ' + i.quantity}">item</div></td>
+      <td th:text="${o.totalProducts}">1</td>
+      <td th:text="${'&#8377;' + #numbers.formatDecimal(o.amountDue,1,2)}">0</td>
+      <td th:text="${#temporals.format(o.orderDate,'dd MMM yyyy HH:mm')}">date</td>
+      <td>
+        <span class="badge bg-warning text-dark" th:if="${o.status == 'pending'}">Incomplete</span>
+        <span class="badge bg-success" th:if="${o.status == 'complete'}">Complete (Paid)</span>
+      </td>
+      <td>
+        <a class="btn btn-sm btn-primary" th:if="${o.status == 'pending'}" th:href="@{/user/orders/{id}/confirm(id=${o.id})}">Confirm</a>
+        <span th:if="${o.status == 'complete'}" class="text-muted">Paid</span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<a class="btn btn-outline-secondary" th:href="@{/user/profile}">Back to profile</a>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

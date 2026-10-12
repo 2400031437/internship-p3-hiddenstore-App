@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('All orders')}"></head>
+<body>
+<nav th:replace="~{fragments :: adminnav}"></nav>
+<div class="container my-4">
+<div th:replace="~{fragments :: alerts}"></div>
+<h3 class="mb-3">All orders</h3>
+<div class="alert alert-info" th:if="${#lists.isEmpty(orders)}">No orders yet.</div>
+<table class="table table-bordered bg-white align-middle" th:if="${!#lists.isEmpty(orders)}">
+  <thead class="table-dark"><tr><th>#</th><th>User</th><th>Amount</th><th>Invoice</th><th>Total products</th><th>Date</th><th>Status</th><th>Delete</th></tr></thead>
+  <tbody>
+    <tr th:each="o, st : ${orders}">
+      <td th:text="${st.count}">1</td>
+      <td th:text="${o.user.username}">user</td>
+      <td th:text="${'&#8377;' + #numbers.formatDecimal(o.amountDue,1,2)}">0</td>
+      <td th:text="${o.invoiceNumber}">123</td>
+      <td th:text="${o.totalProducts}">1</td>
+      <td th:text="${#temporals.format(o.orderDate,'dd MMM yyyy HH:mm')}">date</td>
+      <td><span class="badge bg-warning text-dark" th:if="${o.status == 'pending'}">Incomplete</span>
+          <span class="badge bg-success" th:if="${o.status == 'complete'}">Complete</span></td>
+      <td><form th:action="@{/admin/orders/{id}/delete(id=${o.id})}" method="post" onsubmit="return confirm('Delete this order?');">
+        <button class="btn btn-sm btn-danger" type="submit">Delete</button></form></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

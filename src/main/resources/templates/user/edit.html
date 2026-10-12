@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Edit account')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div class="container my-4">
+<div th:replace="~{fragments :: alerts}"></div>
+<div class="card mx-auto" style="max-width:560px"><div class="card-body">
+  <h3>Edit account</h3>
+  <form th:action="@{/user/edit}" method="post" enctype="multipart/form-data">
+    <div class="mb-2"><label class="form-label">Username</label><input class="form-control" name="username" th:value="${user.username}" required></div>
+    <div class="mb-2"><label class="form-label">Email</label><input class="form-control" type="email" name="email" th:value="${user.email}" required></div>
+    <div class="mb-2"><label class="form-label">User image</label><br>
+      <img class="user-img mb-2" th:src="@{${user.imageUrl}}" alt=""><input class="form-control" type="file" name="image" accept="image/*"></div>
+    <div class="mb-2"><label class="form-label">Address</label><input class="form-control" name="address" th:value="${user.address}"></div>
+    <div class="mb-3"><label class="form-label">Contact number</label><input class="form-control" name="mobile" th:value="${user.mobile}"></div>
+    <button class="btn btn-primary" type="submit">Update</button>
+    <a class="btn btn-outline-secondary" th:href="@{/user/profile}">Cancel</a>
+  </form>
+</div></div>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

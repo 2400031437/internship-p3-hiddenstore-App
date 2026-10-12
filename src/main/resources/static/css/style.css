@@ -1,0 +1,7 @@
+body { background:#f6f7fb; }
+.product-card img { height:200px; object-fit:cover; }
+.product-card:hover { box-shadow:0 6px 18px rgba(0,0,0,.15); transform:translateY(-2px); transition:.2s; }
+.detail-img { height:260px; object-fit:cover; }
+.user-img { width:90px; height:90px; object-fit:cover; border-radius:50%; }
+.thumb { width:60px; height:60px; object-fit:cover; border-radius:6px; }
+footer { background:#212529; color:#ddd; }

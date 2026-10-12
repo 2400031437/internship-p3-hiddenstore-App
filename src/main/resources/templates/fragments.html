@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${title} + ' | Hidden Store'">Hidden Store</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- ===== Shop navbar ===== -->
+<nav th:fragment="navbar">
+  <div class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand fw-bold" th:href="@{/}">Hidden Store</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" th:href="@{/products}">Products</a></li>
+          <li class="nav-item" th:if="${loggedUserName == null}"><a class="nav-link" th:href="@{/user/register}">Register</a></li>
+          <li class="nav-item" th:if="${loggedUserName != null}"><a class="nav-link" th:href="@{/user/profile}">My Account</a></li>
+          <li class="nav-item"><a class="nav-link" th:href="@{/cart}">Cart <span class="badge bg-warning text-dark" th:text="${cartCount}">0</span></a></li>
+          <li class="nav-item"><span class="nav-link">Total: <b th:text="${'&#8377;' + #numbers.formatDecimal(cartTotal,1,2)}">0</b></span></li>
+        </ul>
+        <form class="d-flex" th:action="@{/search}" method="get">
+          <input class="form-control me-2" type="search" name="q" placeholder="Search products">
+          <button class="btn btn-outline-light" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="bg-secondary text-white py-1">
+    <div class="container d-flex justify-content-between">
+      <span th:if="${loggedUserName == null}">Welcome guest</span>
+      <span th:if="${loggedUserName != null}">Welcome <b th:text="${loggedUserName}">user</b></span>
+      <span>
+        <a class="text-white" th:if="${loggedUserName == null}" th:href="@{/user/login}">Login</a>
+        <a class="text-white" th:if="${loggedUserName != null}" th:href="@{/user/logout}">Logout</a>
+        &nbsp;|&nbsp; <a class="text-white" th:href="@{/admin}">Admin area</a>
+      </span>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== Admin navbar ===== -->
+<nav th:fragment="adminnav">
+  <div class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand fw-bold" th:href="@{/admin}">Admin Panel</a>
+      <ul class="navbar-nav me-auto flex-row flex-wrap">
+        <li class="nav-item"><a class="nav-link px-2" th:href="@{/admin/products/new}">Insert Product</a></li>
+        <li class="nav-item"><a class="nav-link px-2" th:href="@{/admin/products}">View Products</a></li>
+        <li class="nav-item"><a class="nav-link px-2" th:href="@{/admin/categories}">Categories</a></li>
+        <li class="nav-item"><a class="nav-link px-2" th:href="@{/admin/brands}">Brands</a></li>
+        <li class="nav-item"><a class="nav-link px-2" th:href="@{/admin/orders}">All Orders</a></li>
+        <li class="nav-item"><a class="nav-link px-2" th:href="@{/admin/payments}">All Payments</a></li>
+        <li class="nav-item"><a class="nav-link px-2" th:href="@{/admin/users}">List Users</a></li>
+      </ul>
+      <span class="navbar-text me-3" th:if="${loggedAdminName != null}">Welcome <b th:text="${loggedAdminName}">admin</b></span>
+      <a class="btn btn-sm btn-light me-2" th:href="@{/}" target="_blank">Open store</a>
+      <a class="btn btn-sm btn-outline-light" th:if="${loggedAdminName != null}" th:href="@{/admin/logout}">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== Flash messages ===== -->
+<div th:fragment="alerts">
+  <div class="alert alert-success alert-dismissible fade show" th:if="${msg != null}">
+    <span th:text="${msg}">ok</span><button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  <div class="alert alert-danger alert-dismissible fade show" th:if="${err != null}">
+    <span th:text="${err}">error</span><button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+</div>
+
+<!-- ===== Product cards ===== -->
+<div th:fragment="productGrid(items)">
+  <div class="row g-3">
+    <div class="col-sm-6 col-lg-4" th:each="p : ${items}">
+      <div class="card product-card h-100">
+        <img th:src="@{${p.image1Url}}" class="card-img-top" th:alt="${p.title}">
+        <div class="card-body">
+          <h5 class="card-title" th:text="${p.title}">Title</h5>
+          <p class="text-muted small mb-1" th:text="${p.brand.title + ' / ' + p.category.title}">brand / category</p>
+          <p class="fw-bold text-success" th:text="${'&#8377;' + #numbers.formatDecimal(p.price,1,2)}">0</p>
+        </div>
+        <div class="card-footer bg-white d-flex gap-2">
+          <a class="btn btn-outline-primary btn-sm" th:href="@{/product/{id}(id=${p.id})}">View more</a>
+          <form th:action="@{/cart/add/{id}(id=${p.id})}" method="post">
+            <button class="btn btn-primary btn-sm" type="submit">Add to cart</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Brands + categories sidebar ===== -->
+<div th:fragment="sidebar">
+  <div class="list-group mb-3">
+    <div class="list-group-item bg-dark text-white">Delivery Brands</div>
+    <a class="list-group-item list-group-item-action" th:each="b : ${brands}" th:href="@{/(brand_id=${b.id})}" th:text="${b.title}">Brand</a>
+  </div>
+  <div class="list-group">
+    <div class="list-group-item bg-dark text-white">Categories</div>
+    <a class="list-group-item list-group-item-action" th:each="c : ${categories}" th:href="@{/(category_id=${c.id})}" th:text="${c.title}">Category</a>
+  </div>
+</div>
+
+<footer th:fragment="footer" class="mt-5 py-4 text-center">
+  <div class="container">&copy; Hidden Store - Spring Boot e-commerce demo</div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Product details')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div class="container my-4">
+<div th:replace="~{fragments :: alerts}"></div>
+<div class="row">
+  <div class="col-md-9">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h3 th:text="${product.title}">Title</h3>
+        <p class="text-muted" th:text="${product.brand.title + ' / ' + product.category.title}">brand / category</p>
+        <div class="row g-2 mb-3">
+          <div class="col-md-4"><img class="img-fluid rounded detail-img w-100" th:src="@{${product.image1Url}}" alt="image 1"></div>
+          <div class="col-md-4"><img class="img-fluid rounded detail-img w-100" th:src="@{${product.image2Url}}" alt="image 2"></div>
+          <div class="col-md-4"><img class="img-fluid rounded detail-img w-100" th:src="@{${product.image3Url}}" alt="image 3"></div>
+        </div>
+        <p th:text="${product.description}">Description</p>
+        <h4 class="text-success" th:text="${'&#8377;' + #numbers.formatDecimal(product.price,1,2)}">0</h4>
+        <form class="d-inline" th:action="@{/cart/add/{id}(id=${product.id})}" method="post">
+          <button class="btn btn-primary" type="submit">Add to cart</button>
+        </form>
+        <a class="btn btn-outline-secondary" th:href="@{/}">Go home</a>
+      </div>
+    </div>
+    <h5>Related products</h5>
+    <p class="text-muted" th:if="${#lists.isEmpty(related)}">No related products.</p>
+    <div th:replace="~{fragments :: productGrid(${related})}"></div>
+  </div>
+  <div class="col-md-3"><div th:replace="~{fragments :: sidebar}"></div></div>
+</div>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

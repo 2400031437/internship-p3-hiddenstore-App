@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Cart')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div class="container my-4">
+<div th:replace="~{fragments :: alerts}"></div>
+<h3 class="mb-3">Your Cart</h3>
+<div class="alert alert-info" th:if="${#lists.isEmpty(lines)}">Your cart is empty. <a th:href="@{/}">Continue shopping</a></div>
+<form th:if="${!#lists.isEmpty(lines)}" th:action="@{/cart/update}" method="post">
+  <table class="table table-bordered bg-white align-middle">
+    <thead class="table-dark"><tr><th>Product</th><th></th><th style="width:120px">Quantity</th><th>Price</th><th>Subtotal</th><th>Remove</th></tr></thead>
+    <tbody>
+      <tr th:each="l : ${lines}">
+        <td th:text="${l.product.title}">name</td>
+        <td><img class="thumb" th:src="@{${l.product.image1Url}}" alt=""></td>
+        <td><input class="form-control" type="number" min="0" th:name="${'qty_' + l.product.id}" th:value="${l.quantity}"></td>
+        <td th:text="${'&#8377;' + #numbers.formatDecimal(l.product.price,1,2)}">0</td>
+        <td th:text="${'&#8377;' + #numbers.formatDecimal(l.subtotal,1,2)}">0</td>
+        <td><a class="btn btn-sm btn-outline-danger" th:href="@{/cart/remove/{id}(id=${l.product.id})}">Remove</a></td>
+      </tr>
+    </tbody>
+    <tfoot><tr><th colspan="4" class="text-end">Total</th><th colspan="2" th:text="${'&#8377;' + #numbers.formatDecimal(cartTotal,1,2)}">0</th></tr></tfoot>
+  </table>
+  <button class="btn btn-secondary" type="submit">Update cart</button>
+  <a class="btn btn-outline-primary" th:href="@{/}">Continue shopping</a>
+  <a class="btn btn-success" th:href="@{/checkout}">Checkout</a>
+</form>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

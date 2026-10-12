@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('All payments')}"></head>
+<body>
+<nav th:replace="~{fragments :: adminnav}"></nav>
+<div class="container my-4">
+<div th:replace="~{fragments :: alerts}"></div>
+<h3 class="mb-3">All payments</h3>
+<div class="alert alert-info" th:if="${#lists.isEmpty(payments)}">No payments yet.</div>
+<table class="table table-bordered bg-white" th:if="${!#lists.isEmpty(payments)}">
+  <thead class="table-dark"><tr><th>#</th><th>User</th><th>Invoice</th><th>Amount</th><th>Mode</th><th>Date</th></tr></thead>
+  <tbody>
+    <tr th:each="p, st : ${payments}">
+      <td th:text="${st.count}">1</td>
+      <td th:text="${p.order.user.username}">user</td>
+      <td th:text="${p.invoiceNumber}">123</td>
+      <td th:text="${'&#8377;' + #numbers.formatDecimal(p.amount,1,2)}">0</td>
+      <td th:text="${p.paymentMode}">UPI</td>
+      <td th:text="${#temporals.format(p.paymentDate,'dd MMM yyyy HH:mm')}">date</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

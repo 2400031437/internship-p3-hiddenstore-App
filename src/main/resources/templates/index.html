@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Home')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div class="container my-4">
+<div th:replace="~{fragments :: alerts}"></div>
+<div class="p-4 mb-4 bg-white rounded shadow-sm" th:if="${showHero}">
+  <h2>Welcome to Hidden Store</h2>
+  <p class="mb-0 text-muted">Browse products by delivery brand or category, search by keyword and add items to your cart. Products appear in random order on every visit.</p>
+</div>
+<div class="row">
+  <div class="col-md-9">
+    <h4 class="mb-3" th:text="${heading}">Our Products</h4>
+    <div class="alert alert-warning" th:if="${notice != null}" th:text="${notice}"></div>
+    <div th:replace="~{fragments :: productGrid(${products})}"></div>
+  </div>
+  <div class="col-md-3"><div th:replace="~{fragments :: sidebar}"></div></div>
+</div>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

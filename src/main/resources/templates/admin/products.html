@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('View products')}"></head>
+<body>
+<nav th:replace="~{fragments :: adminnav}"></nav>
+<div class="container my-4">
+<div th:replace="~{fragments :: alerts}"></div>
+<div class="d-flex justify-content-between mb-3"><h3>All products</h3><a class="btn btn-primary" th:href="@{/admin/products/new}">Insert product</a></div>
+<table class="table table-bordered bg-white align-middle">
+  <thead class="table-dark"><tr><th>#</th><th>Title</th><th>Image</th><th>Brand</th><th>Category</th><th>Price</th><th>Total sold</th><th>Edit</th><th>Delete</th></tr></thead>
+  <tbody>
+    <tr th:each="e, st : ${soldMap}">
+      <td th:text="${st.count}">1</td>
+      <td th:text="${e.key.title}">title</td>
+      <td><img class="thumb" th:src="@{${e.key.image1Url}}" alt=""></td>
+      <td th:text="${e.key.brand.title}">brand</td>
+      <td th:text="${e.key.category.title}">category</td>
+      <td th:text="${'&#8377;' + #numbers.formatDecimal(e.key.price,1,2)}">0</td>
+      <td th:text="${e.value}">0</td>
+      <td><a class="btn btn-sm btn-warning" th:href="@{/admin/products/{id}/edit(id=${e.key.id})}">Edit</a></td>
+      <td><form th:action="@{/admin/products/{id}/delete(id=${e.key.id})}" method="post" onsubmit="return confirm('Delete this product?');">
+        <button class="btn btn-sm btn-danger" type="submit">Delete</button></form></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

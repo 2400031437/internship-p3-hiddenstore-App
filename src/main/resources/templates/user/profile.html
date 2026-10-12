@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('My account')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div class="container my-4">
+<div th:replace="~{fragments :: alerts}"></div>
+<div class="row">
+  <div class="col-md-3 text-center">
+    <img class="user-img mb-2" th:src="@{${user.imageUrl}}" alt="profile">
+    <h5 th:text="${user.username}">user</h5>
+    <div class="list-group mt-3 text-start">
+      <a class="list-group-item list-group-item-action" th:href="@{/user/orders(status='pending')}">Pending orders</a>
+      <a class="list-group-item list-group-item-action" th:href="@{/user/orders}">My orders</a>
+      <a class="list-group-item list-group-item-action" th:href="@{/user/edit}">Edit account</a>
+      <form th:action="@{/user/delete}" method="post" onsubmit="return confirm('Delete your account permanently?');">
+        <button class="list-group-item list-group-item-action text-danger w-100 text-start" type="submit">Delete account</button>
+      </form>
+      <a class="list-group-item list-group-item-action" th:href="@{/user/logout}">Logout</a>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <div class="card"><div class="card-body">
+      <h4>Welcome <span th:text="${user.username}">user</span></h4>
+      <p th:if="${pendingCount == 0}">You have zero pending orders.</p>
+      <p th:if="${pendingCount > 0}">You have <b th:text="${pendingCount}">1</b> pending order(s).
+        <a th:href="@{/user/orders(status='pending')}">Order details</a></p>
+      <a class="btn btn-primary" th:href="@{/}">Explore products</a>
+    </div></div>
+  </div>
+</div>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

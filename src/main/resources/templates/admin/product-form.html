@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Product form')}"></head>
+<body>
+<nav th:replace="~{fragments :: adminnav}"></nav>
+<div class="container my-4">
+<div th:replace="~{fragments :: alerts}"></div>
+<div class="card mx-auto" style="max-width:720px"><div class="card-body">
+  <h3 th:text="${product.id == null} ? 'Insert product' : 'Edit product'">Insert product</h3>
+  <form th:action="@{/admin/products/save}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="id" th:value="${product.id}" th:if="${product.id != null}">
+    <div class="mb-2"><label class="form-label">Product title</label><input class="form-control" name="title" th:value="${product.title}" required></div>
+    <div class="mb-2"><label class="form-label">Description</label><textarea class="form-control" name="description" rows="3" th:text="${product.description}"></textarea></div>
+    <div class="mb-2"><label class="form-label">Keywords (used by search, comma separated)</label><input class="form-control" name="keywords" th:value="${product.keywords}"></div>
+    <div class="row">
+      <div class="col-md-6 mb-2"><label class="form-label">Category</label>
+        <select class="form-select" name="categoryId" required>
+          <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.title}" th:selected="${product.category != null and product.category.id == c.id}"></option>
+        </select></div>
+      <div class="col-md-6 mb-2"><label class="form-label">Brand</label>
+        <select class="form-select" name="brandId" required>
+          <option th:each="b : ${brands}" th:value="${b.id}" th:text="${b.title}" th:selected="${product.brand != null and product.brand.id == b.id}"></option>
+        </select></div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 mb-2"><label class="form-label">Image 1</label><input class="form-control" type="file" name="image1" accept="image/*"><img class="thumb mt-1" th:if="${product.id != null}" th:src="@{${product.image1Url}}" alt=""></div>
+      <div class="col-md-4 mb-2"><label class="form-label">Image 2</label><input class="form-control" type="file" name="image2" accept="image/*"><img class="thumb mt-1" th:if="${product.id != null}" th:src="@{${product.image2Url}}" alt=""></div>
+      <div class="col-md-4 mb-2"><label class="form-label">Image 3</label><input class="form-control" type="file" name="image3" accept="image/*"><img class="thumb mt-1" th:if="${product.id != null}" th:src="@{${product.image3Url}}" alt=""></div>
+    </div>
+    <div class="mb-3"><label class="form-label">Price (&#8377;)</label><input class="form-control" type="number" step="0.01" min="0" name="price" th:value="${product.price}" required></div>
+    <button class="btn btn-primary" type="submit" th:text="${product.id == null} ? 'Insert product' : 'Update product'">Save</button>
+    <a class="btn btn-outline-secondary" th:href="@{/admin/products}">Cancel</a>
+  </form>
+</div></div>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

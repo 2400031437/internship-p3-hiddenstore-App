@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Payment')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div class="container my-4">
+<div th:replace="~{fragments :: alerts}"></div>
+<div class="card mx-auto" style="max-width:640px">
+  <div class="card-body">
+    <h3>Payment options</h3>
+    <ul class="list-group mb-3">
+      <li class="list-group-item d-flex justify-content-between" th:each="l : ${lines}">
+        <span th:text="${l.product.title + ' x ' + l.quantity}">item</span>
+        <span th:text="${'&#8377;' + #numbers.formatDecimal(l.subtotal,1,2)}">0</span>
+      </li>
+      <li class="list-group-item d-flex justify-content-between fw-bold"><span>Total</span><span th:text="${'&#8377;' + #numbers.formatDecimal(cartTotal,1,2)}">0</span></li>
+    </ul>
+    <form th:action="@{/checkout/pay-offline}" method="post">
+      <button class="btn btn-success btn-lg w-100" type="submit">Pay Offline</button>
+    </form>
+    <p class="text-muted small mt-2 mb-0">Your order is placed as "incomplete" until you confirm the payment from My Orders.</p>
+  </div>
+</div>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>
